@@ -107,7 +107,10 @@ app.get('/sse', async (req, res) => {
   // keep the connection alive
   req.socket.setKeepAlive(true);
   req.socket.setTimeout(0);
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('Keep-Alive', 'timeout=120');
   res.setHeader('X-Accel-Buffering', 'no');
+  res.flushHeaders?.();
 
   const transport = new SSEServerTransport('/message', res);
   await transport.start();
@@ -120,7 +123,7 @@ app.get('/sse', async (req, res) => {
     } catch {
       clearInterval(hb);
     }
-  }, 15000);
+  }, 10000);
 
   sessions.set(transport.sessionId, { transport, hb });
 
