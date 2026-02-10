@@ -8,7 +8,8 @@ import {
   CallToolRequestSchema
 } from '@modelcontextprotocol/sdk/types.js';
 
-const PORT = process.env.MCP_SERVER_PORT || 8000;
+// Prefer PORT (Coolify default), fall back to MCP_SERVER_PORT, then 8000
+const PORT = process.env.PORT || process.env.MCP_SERVER_PORT || 8000;
 const HOST = process.env.MCP_SERVER_HOST || '0.0.0.0';
 const MODEL = process.env.DEEP_RESEARCH_MODEL || 'o3-deep-research-2025-06-26';
 const apiKey = process.env.OPENAI_API_KEY;
