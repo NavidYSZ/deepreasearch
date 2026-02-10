@@ -103,22 +103,42 @@ const sessions = new Map();
 const app = express();
 
 // Establish SSE session
-app.get('/sse', async (_req, res) => {
+app.get('/sse', async (req, res) => {
+  // keep the connection alive
+  req.socket.setKeepAlive(true);
+  req.socket.setTimeout(0);
+  res.setHeader('X-Accel-Buffering', 'no');
+
   const transport = new SSEServerTransport('/message', res);
   await transport.start();
   await server.connect(transport);
-  sessions.set(transport.sessionId, transport);
+
+  // Heartbeat to keep proxies happy
+  const hb = setInterval(() => {
+    try {
+      res.write(':\n\n');
+    } catch {
+      clearInterval(hb);
+    }
+  }, 15000);
+
+  sessions.set(transport.sessionId, { transport, hb });
+
+  res.on('close', () => {
+    clearInterval(hb);
+    sessions.delete(transport.sessionId);
+  });
 });
 
 // Receive POSTed messages from client
 app.post('/message', (req, res) => {
   const sessionId = req.query.sessionId;
-  const transport = sessions.get(sessionId);
-  if (!transport) {
+  const entry = sessions.get(sessionId);
+  if (!entry) {
     res.status(404).end('unknown session');
     return;
   }
-  transport.handlePostMessage(req, res);
+  entry.transport.handlePostMessage(req, res);
 });
 
 app.get('/', (_req, res) => {
