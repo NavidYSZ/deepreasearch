@@ -1,0 +1,13 @@
+.git
+.gitignore
+node_modules
+npm-debug.log
+Dockerfile
+.env
+.env.local
+.venv
+__pycache__
+*.pyc
+dist
+build
+*.log

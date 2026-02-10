@@ -1,0 +1,10 @@
+.env
+.venv
+node_modules
+__pycache__/
+*.pyc
+npm-debug.log
+yarn.lock
+dist
+build
+*.log

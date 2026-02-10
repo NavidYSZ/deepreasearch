@@ -1,0 +1,9 @@
+README.md
+pyproject.toml
+src/mcp_server.py
+src/run_agent.py
+src/deepresearch_mcp.egg-info/PKG-INFO
+src/deepresearch_mcp.egg-info/SOURCES.txt
+src/deepresearch_mcp.egg-info/dependency_links.txt
+src/deepresearch_mcp.egg-info/requires.txt
+src/deepresearch_mcp.egg-info/top_level.txt
